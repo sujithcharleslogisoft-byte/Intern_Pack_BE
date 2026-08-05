@@ -137,6 +137,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=20),
+}
+
 
 # For Media files configuration
 MEDIA_URL = '/media/'
