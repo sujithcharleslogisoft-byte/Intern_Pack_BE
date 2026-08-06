@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response 
 from django.contrib.auth.models import User
 from django.db.models import Q
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Category, product
@@ -61,13 +63,37 @@ class LoginView(viewsets.ViewSet):
         
 ####=======Categories(Readonly Viewset)==========#
 class CategoryViewSet(viewsets.ModelViewSet):
-
+     
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]        
+    
+    ###=====Permissions====###
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+
+        return [permission() for permission in permission_classes]      
     
 ####=====Products (Full CRUD ViewSet)======####
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = product.objects.all()
     serializer_class = ProductSerializer
+    
+    ###=====Permissions====###
+    def get_permissions(self):
+
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+
+        return [permission() for permission in permission_classes]
+    
+    ## Pagination & Filters 
+    filter_backends = [DjangoFilterBackend,SearchFilter]
+    filterset_fields = ["category"]
+    search_fields = ['title','description']
+    
                    

@@ -16,6 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
         
 ###========Product Serializer (for list view/detail/create/update======###
 class ProductSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField( source="category.name",read_only=True)              ##for these read the category name because the DE stores the ID in Products 
     class Meta():
         model = product
         fields = ['id', 'title', 'price', 'quantity', 'category', 'category_name', 'image']
