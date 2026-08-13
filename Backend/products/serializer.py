@@ -47,9 +47,4 @@ class ProductSerializer(serializers.ModelSerializer):
         if value > 100:
             raise serializers.ValidationError("Discount must be between 0 and 100 percent.")
         return value
-    
-    def validate_image(self, value):
-        print(value)
-        if  value.size < 500 :
-            raise serializers.ValidationError("Image size must be lessthan 500 KB")
-        return value  
+ 
