@@ -6,10 +6,11 @@ from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Category, product
+from .models import Category,Product #Brand
 from .serializer import (
     LoginSerializer,
     CategorySerializer,
+    #BrandSerializer,
     ProductSerializer,
 )
 
@@ -61,7 +62,7 @@ class LoginView(viewsets.ViewSet):
         },status=status.HTTP_200_OK)    
         
         
-####=======Categories(Readonly Viewset)==========#
+####=======Categories(full CRUD Viewset)==========#
 class CategoryViewSet(viewsets.ModelViewSet):
      
     queryset = Category.objects.all()
@@ -74,11 +75,26 @@ class CategoryViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAuthenticated]
 
-        return [permission() for permission in permission_classes]      
+        return [permission() for permission in permission_classes] 
+    
+    
+####======= Brand (Full CRUD viewset)
+# class BrandViewSet(viewsets.ModelViewSet):
+#     queryset = Brand.objects.all()
+#     serializer_class = BrandSerializer
+    
+#      ###=====Permissions====###
+#     def get_permissions(self):
+#         if self.action in ["list", "retrieve"]:
+#             permission_classes = [AllowAny]
+#         else:
+#             permission_classes = [IsAuthenticated]
+    
+#         return [permission() for permission in permission_classes]         
     
 ####=====Products (Full CRUD ViewSet)======####
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = product.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     
     ###=====Permissions====###

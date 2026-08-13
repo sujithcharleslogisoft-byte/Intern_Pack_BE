@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Category, product
+from .models import Category,Product  #Brand
 
 ###===== Authentication Serializer ======###
 class LoginSerializer(serializers.Serializer):
@@ -14,12 +14,20 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id','name','image']
         
         
+# class BrandSerializer(serializers.ModelSerializer):
+#     class Meta():
+#         model = Brand
+#         fields = ['id','name','discount']
+                
+        
 ###========Product Serializer (for list view/detail/create/update======###
 class ProductSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField( source="category.name",read_only=True)              ##for these read the category name because the DE stores the ID in Products 
+    #category_name = serializers.CharField( source="category.name",read_only=True)              ##for these read the category name because the DE stores the ID in Products
+    #brand_name = serializers.CharField(source="brand.name",read_only=True) 
     class Meta():
-        model = product
-        fields = ['id', 'title', 'price', 'quantity', 'category', 'category_name', 'image']
+        model = Product
+        fields = ['id', 'price','description', 'quantity', 'category','image']  #'brand_name',
+        depth = 1 
         
     ####========Validations (price/quantity)============#
     def validate_price(self, value):
@@ -33,3 +41,15 @@ class ProductSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError("Quantity cannot be negative.")
         return value       
+    
+    
+    def validate_discount(self, value):
+        if value > 100:
+            raise serializers.ValidationError("Discount must be between 0 and 100 percent.")
+        return value
+    
+    def validate_image(self, value):
+        print(value)
+        if  value.size < 500 :
+            raise serializers.ValidationError("Image size must be lessthan 500 KB")
+        return value  
