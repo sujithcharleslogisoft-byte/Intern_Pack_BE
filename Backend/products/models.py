@@ -33,7 +33,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     slug = models.SlugField()  
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     category = models.ForeignKey("Category", on_delete=models.PROTECT,related_name="products")
     #brand = models.ForeignKey("Brand", on_delete=models.PROTECT,related_name="products",null=True,blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
